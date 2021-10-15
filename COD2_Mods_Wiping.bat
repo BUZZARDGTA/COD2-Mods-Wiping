@@ -25,7 +25,7 @@ title COD2 Mods Wiping
 >nul 2>&1 dism || call :EXIT 1
 setlocal DisableDelayedExpansion
 cd /d "%~dp0"
-set "@ERROR=for %%A in ("!database[%%A]!") do (echo. & echo ERROR: Failed deleting: "%%~nxA". & echo You can still do it manually through Windows file manager. & if not defined error set error=1)"
+set "@ERROR=for %%A in ("!Database[%%A]!") do (echo. & echo ERROR: Failed deleting: "%%~nxA". & echo You can still do it manually through Windows file manager. & if not defined error set error=1)"
 setlocal EnableDelayedExpansion
 set error=
 
@@ -54,28 +54,28 @@ echo.
 echo  ■ Searching modded scripts in: "!InstallLocation!"
 echo  ├──────────────────────────────────────────────────────────────────────────────
 setlocal DisableDelayedExpansion
-set first=
-set database[#]=0
+set First=
+set Database[#]=0
 setlocal EnableDelayedExpansion
-set first=1
+set First=1
 for /f "tokens=1*delims=:" %%A in ('2^>nul dir "!InstallLocation!*.iwd" /a:-d /b /s ^| findstr /vrc:"iw_..\.iwd" /c:"localized_.*_iw..\.iwd" ^| findstr /nrc:".*"') do (
-    if defined first endlocal
+    if defined First endlocal
     echo  ├ %%~fB
-    set "database[%%A]=%%~fB"
-    set "database[#]=%%A"
+    set "Database[%%A]=%%~fB"
+    set "Database[#]=%%A"
 )
 setlocal EnableDelayedExpansion
-if "!database[#]!"=="0" echo  │ No modded scripts found.
+if "!Database[#]!"=="0" echo  │ No modded scripts found.
 echo  └──────────────────────────────────────────────────────────────────────────────
-if "!database[#]!"=="0" call :EXIT
+if "!Database[#]!"=="0" call :EXIT
 echo.
 <nul set /p=" ■ Do you confirm to delete those listed files: [Y/N] ? "
 choice /n /c YN
 if "!ErrorLevel!"=="1" (
-    for /l %%A in (1 1 !database[#]!) do (
-        if exist "!database[%%A]!" (
-            >nul 2>&1 del /f /q "!database[%%A]!"
-            if exist "!database[%%A]!" %@ERROR%
+    for /l %%A in (1 1 !Database[#]!) do (
+        if exist "!Database[%%A]!" (
+            >nul 2>&1 del /f /q "!Database[%%A]!"
+            if exist "!Database[%%A]!" %@ERROR%
         ) else (
             %@ERROR%
         )
